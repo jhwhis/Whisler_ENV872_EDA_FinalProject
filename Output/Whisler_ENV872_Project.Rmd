@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 \newpage
 \tableofcontents 
 \newpage
@@ -8,18 +13,31 @@
 
 ```{r setup, include=FALSE}
 # Set your working directory
+setwd("/home/guest/Whisler_ENV872_EDA_FinalProject")
 
 # Load your packages
+library(tidyverse)
+library(lubridate)
+library(trend)
+library(zoo)
+library(Kendall)
+library(tseries)
 
 # Set your ggplot theme
+mytheme <- theme_classic(base_size = 14) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "top")
+theme_set(mytheme)
 
 # Load your datasets
+read.csv("~/Whisler_ENV872_EDA_FinalProject/Data/Processed/clean_data.csv")
 
 ```
 
 
 # Rationale and Research Questions
 
+As temperatures continue to destabilize across the globe in response to greenhouse gas emissions, certain areas have been
 
 
 \newpage
