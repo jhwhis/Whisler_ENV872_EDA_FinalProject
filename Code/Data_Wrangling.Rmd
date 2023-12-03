@@ -1,5 +1,5 @@
 ---
-title: "Data_Gathering"
+title: "Data_Wrangling"
 author: "Jake Whisler"
 date: "2023-12-03"
 output: html_document
@@ -12,7 +12,6 @@ library(here)
 
 getwd()
 ```
-
 
 ```{r establishing-data-and-column-names}
 buoy_raw_data <- read.table("~/Whisler_ENV872_EDA_FinalProject/Data/Raw/46092_2022_data_raw.txt",
@@ -27,5 +26,17 @@ colnames(buoy_raw_data) <- c("Year","Month","Day","Hour","Minute","WindDirection
 ```{r removing-incomplete-columns}
 buoy_processed_data <- subset(buoy_raw_data, select = c("Year","Month","Day",
                                                         "WaterTemperature"))
+```
+
+```{r reading-in-precipitation-data}
+precip_data <- read.csv("~/Whisler_ENV872_EDA_FinalProject/Data/Raw/2022_precipitation_data.csv")
+```
+
+```{r merging-dataframes}
+clean_data <- merge(buoy_processed_data, precip_data)
+```
+
+```{r exporting-clean-data}
+write.csv(clean_data, "~/Whisler_ENV872_EDA_FinalProject/Data/Processed/clean_data.csv", row.names = FALSE)
 ```
 
