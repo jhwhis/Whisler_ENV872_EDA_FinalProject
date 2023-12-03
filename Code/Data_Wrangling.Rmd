@@ -1,0 +1,31 @@
+---
+title: "Data_Gathering"
+author: "Jake Whisler"
+date: "2023-12-03"
+output: html_document
+---
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(rvest)
+library(lubridate)
+library(here)
+
+getwd()
+```
+
+
+```{r establishing-data-and-column-names}
+buoy_raw_data <- read.table("~/Whisler_ENV872_EDA_FinalProject/Data/Raw/46092_2022_data_raw.txt",
+           header=FALSE)
+colnames(buoy_raw_data) <- c("Year","Month","Day","Hour","Minute","WindDirection",
+                             "WindSpeed","WindGust","WaveHeight","DominantWavePeriod",
+                             "AverageWavePeriod","MeanWaveDirection","AtmosphericPressure",
+                             "AirTemperature","WaterTemperature","DewPoint",
+                             "Visibility","Tide")
+```
+
+```{r removing-incomplete-columns}
+buoy_processed_data <- subset(buoy_raw_data, select = c("Year","Month","Day",
+                                                        "WaterTemperature"))
+```
+
