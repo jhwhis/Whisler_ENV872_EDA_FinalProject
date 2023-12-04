@@ -1,12 +1,12 @@
 ---
 output:
-  pdf_document: default
+  pdf_document:
+    fig_caption: yes
   html_document: default
+  
 ---
 \newpage
 \tableofcontents 
-\newpage
-\listoftables 
 \newpage
 \listoffigures 
 \newpage
@@ -30,7 +30,7 @@ mytheme <- theme_classic(base_size = 14) +
 theme_set(mytheme)
 
 # Load your datasets
-read.csv("~/Whisler_ENV872_EDA_FinalProject/Data/Processed/clean_data.csv")
+clean_data <- read.csv("~/Whisler_ENV872_EDA_FinalProject/Data/Processed/clean_data.csv")
 
 ```
 
@@ -55,11 +55,31 @@ For water temperature, data was taken from the National Data Buoy Center's websi
 
 For precipitation, Weather Underground, a subsidiary of The Weather Company, was used due to its accuracy and storage of long-term meteorological records. Data was found on the Monterey Peninsula Airport Station's page of the Weather Underground website and precipitation records were manually transcribed into Microsoft Excel and subsequently exported as a comma-separated value (.csv) file for use in R's coding language.
 
+The two datasets were merged in R for use in time-series analysis.
 
 \newpage
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 
+```
+
+
+\newpage
 # Exploratory Analysis 
 
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Water Temperature vs. Date"}
+ggplot(clean_data, aes(x = Date, y = WaterTemperature)) +
+  geom_line() +
+  ylab("Water Temperature (Celsius)") +
+  scale_x_discrete(guide = guide_axis(check.overlap = TRUE))
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Precipitation vs. Water Temperature"}
+ggplot(clean_data, aes(x = Precipitation, y = WaterTemperature)) +
+  geom_point() +
+  ylab("Water Temperature (Celsius)") +
+  xlab("Precipitation (inches)") +
+  geom_smooth()
+```
 
 
 \newpage
@@ -68,17 +88,37 @@ For precipitation, Weather Underground, a subsidiary of The Weather Company, was
 
 
 
-## Question 1: <insert specific question here and add additional subsections for additional questions below, if needed>
+## Question 1: How did water temperature change over the course of the year 2022?
 
-## Question 2: 
+```{r echo=FALSE}
+f_month <- month(first(clean_data$Date))
+f_year <- year(first(clean_data$Date))
+WaterTemperature_ts <- ts(clean_data$WaterTemperature,
+                   start=c(f_year,f_month),
+                   frequency=12)
 
+WaterTemperature_trend <- Kendall::SeasonalMannKendall(WaterTemperature_ts)
+summary(WaterTemperature_trend)
+
+```
+Upon initial examination of the line plot presented above that compares date against water temperature, it would seem that there is indeed a trend: the year begins with water temperatures decreasing, and once summer is reached, temperatures slowly begin to rise and reach their peak in October, where they then begin to decrease. However, after running a seasonal Mann-Kendall test to determine the validity of this correlation, a p-value of 0.20058 was returned, which is a relatively low confidence level for confirming such a trend to be the case. This may be due to a variety of factors, mostly notably the day-to-day variability of water temperature depending on cloud cover and sunlight exposure altering the surface temperature of the water that the buoy detects.
+
+## Question 2: Does precipitation influence water temperature?
+
+```{r echo=FALSE}
+precip_vs_watertemp_regression <-
+  lm(data = clean_data, WaterTemperature ~ Precipitation)
+summary(precip_vs_watertemp_regression)
+```
+
+As seen in the dotplot and associated line of best fit above, drawing a definitive conclusion about the relationship between precipitation and water temperature is difficult. Water temperature seems to reach its peak and its lowest completely independent of precipitation, and the statistical linear regression confirms this: a p-value of 0.5991 was returned, indicating a distinct lack of a trend between these two variables. This could be for a variety of reasons. 2022 was rather sparse in terms of precipitation for California, with some months seeing absolutely no rain whatsoever. Simultaneously, it seemed as though the water temperature in Monterey Bay primarily follows seasonal patterns, and even upwards of two inches of rainfall is not enough to noticeably shift surface water temperatures in the bay.
 
 
 
 \newpage
 
 # Summary and Conclusions
-
+In conclusion, it appears that water temperature in Monterey Bay is incredibly resistant towards change. This may be a result of a simple aspect of water - its high heat capacity - leading such a large volume of it to take considerable time to adapt to air temperatures and external factors. Water temperatures only begin to rise as summer progresses and hits its peak in October, many months after typical air temperature annual highs are reached. However, certain aspects of the data used for this analysis are imperfect; many months of 2022 had no precipitation whatsoever (which is, as an aside, indicative of its own issue), meaning that a large percentage of days used for analysis were unusable in regards to my second research question. The results seem to suggest that Monterey Bay's water temperature, on an individual year basis, still follows its own seasonal trends. However, further, more extensive examination of data from years prior would surely shed a light upon 
 
 \newpage
 
