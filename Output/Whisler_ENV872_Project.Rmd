@@ -1,4 +1,7 @@
 ---
+title: "Monterey Bay Water Temperature Dynamics"
+author: "Jake Whisler"
+date: "Fall 2023"
 output:
   pdf_document:
     fig_caption: yes
@@ -125,3 +128,7 @@ In conclusion, it appears that water temperature in Monterey Bay is incredibly r
 # References
 
 State of California - Ca. Coastal Commission. (n.d.). California Coastal Commission. ca. https://www.coastal.ca.gov/climate/extreme-weather/ 
+
+# GitHub Repository
+
+https://github.com/jhwhis/Whisler_ENV872_EDA_FinalProject
